@@ -1,4 +1,2 @@
-.vs
-obj
-Temp
-Library
+.DS_Store
+*.userprefs
