@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Engine;
 
-public class Login : MonoBehaviour {
+public class GameStart : MonoBehaviour {
 
 	public Button btn;
 	public InputField input;
@@ -32,9 +32,10 @@ public class Login : MonoBehaviour {
 		NetMgr.Instance.send (proto);
 	}
 
-	void LoginS2C(ProtoBase proto)
+	public void LoginS2C(ProtoBase proto)
 	{
-		this.gameObject.SetActive (false);
+		Debug.Log ("logn s2c ");
 		SceneManager.LoadScene ("battle");
 	}
+
 }

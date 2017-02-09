@@ -23,6 +23,12 @@ message p_test {
     required int32 v2;
 }
 
+message p_role {
+    required string name;
+    required int32 x;
+    required int32 y;
+}
+
 //-------------------------------------
 // 协议部分
 //-------------------------------------
@@ -67,5 +73,14 @@ message m__role__login__c2s {
 
 // 角色信息
 message m__role__login__s2c {
-    required int32 msg_id [default = 1002];
+    required int32 msg_id [default = 1100];
+}
+
+message m__scene__enter__c2s {
+    required int32 msg_id [default = 1200];
+}
+
+message m__scene__roles__s2c {
+    required int32 msg_id [default = 1201];
+    repeated p_role roles;
 }

@@ -61,9 +61,16 @@ handle_info({tcp, Socket, <<Bin/binary>>}, #state{transport = Transport} = State
     Transport:setopts(Socket, [{active, once}]),
     State1 = proc_tcp(Bin, State),
     {noreply, State1, ?TIMEOUT};
-handle_info({send, Bin}, #state{socket = Socket, transport = Transport} = State) ->
-    Transport:send(Socket, Bin),
+handle_info({send, Proto}, #state{socket = Socket, transport = Transport} = State) ->
+    lager:info("gate send proto: ~p~n", [{Proto}]),
+    {ok, Bin} = game_pb:encode(Proto),
+    Len = erlang:byte_size(Bin) + 1,
+    Iszip = 0,
+    Bin1 = <<Len:32, Iszip:8, Bin/binary>>,
+    Transport:send(Socket, Bin1),
     {noreply, State};
+handle_info({tcp_closed, Socket}, State) ->
+    {stop, normal, State};
 handle_info(Info, State) ->
     lager:error("unhandled into : ~p~n", [Info]),
     {noreply, State}.
@@ -86,32 +93,28 @@ proc_tcp(Bin,#state{socket_cache=Cache} =  State) ->
         _ ->
             %% route DataBin
             {ok, Proto} = game_pb:decode(DataBin),
-            handle_proto(Proto),
-            proc_tcp([], State#state{socket_cache=Cache2})
+            State1 = handle_proto(Proto, State),
+            proc_tcp([], State1#state{socket_cache=Cache2})
     end.
 
-handle_proto(#m__system__heartbeat__c2s{}) -> ok;
-handle_proto(#m__role__login__c2s{name = Name}) ->
+handle_proto(#m__system__heartbeat__c2s{}, State) -> State;
+handle_proto(#m__role__login__c2s{name = Name}, State) ->
     {ok, DefaultGameSrv} = application:get_env(gate, default_game),
     lager:info("login rpc call: ~p~n", [{Name, DefaultGameSrv}]),
-    rpc:call(DefaultGameSrv, role_manager, create, [self()]),
+    rpc:call(DefaultGameSrv, role_manager, create, [Name, self()]),
     receive
-        {role_login, {pid, Pid}, {id, Id}} ->
-            Proto = #m__role__login__s2c{},
-            lager:info("login s2c: ~p~n", [{Name}]),
-            {ok, Bin} = game_pb:encode(Proto),
-            Len = erlang:byte_size(Bin) + 1,
-            Iszip = 0,
-            Final = <<Len:32, Iszip:8, Bin/binary>>,
-            self() ! {send, Final},
-            ok;
+        {role_login, LoginS2C, Pid} ->
+            self() ! {send, LoginS2C},
+            State#state{role = Name};
         Error ->
-            lager:error("start role error : ~p~n", [{Error}])
+            lager:error("start role error : ~p~n", [{Error}]),
+            State
     after 10000 ->
-            lager:error("start role timeout : ~p~n", [{}])
-    end,
-    ok;
-handle_proto(Proto) ->
-    lager:info("unhandled proto: ~p~n", [Proto]),
-    RoleMgr = global:whereis_name(role_manager),
-    RoleMgr ! {proto, Proto}.
+            lager:error("start role timeout : ~p~n", [{}]),
+            State
+    end;
+handle_proto(Proto, #state{role = Name} = State) ->
+    lager:info("dispatch proto: ~p~n", [Proto]),
+    {ok, DefaultGameSrv} = application:get_env(gate, default_game),
+    rpc:cast(DefaultGameSrv, role, dispatch, [Name, Proto]),
+    State.

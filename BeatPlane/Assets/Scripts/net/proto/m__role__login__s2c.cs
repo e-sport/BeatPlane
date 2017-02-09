@@ -5,7 +5,7 @@ public class m__role__login__s2c : ProtoBase
 {
     public m__role__login__s2c()
     {
-        proto_id = 1002;
+        proto_id = 1100;
     }
     public override void read(ByteArray byteArray)
     {

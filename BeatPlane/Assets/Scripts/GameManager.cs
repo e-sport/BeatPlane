@@ -19,7 +19,9 @@ public class GameManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         _instance = this;
-//		gameObject.AddComponent<GlobalTimer>();
+		m__scene__enter__c2s proto = new m__scene__enter__c2s();
+		NetMgr.addCMD (ProtoMap.m__scene__roles__s2c, RolesS2C);
+		NetMgr.Instance.send (proto);
 	}
 
     public void addScore(int sc)
@@ -55,5 +57,15 @@ public class GameManager : MonoBehaviour {
     // Update is called once per frame
     void Update () {
 	    
+	}
+
+
+	public void RolesS2C(ProtoBase proto)
+	{
+		Debug.Log ("roles s2c ");
+		Object original = Resources.Load ("Prefabs/hero");
+
+		Object copyObject = GameObject.Instantiate(original);
+//		copyObject.name = copyObject.name.Replace("(Clone)", "");
 	}
 }

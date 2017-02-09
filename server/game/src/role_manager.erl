@@ -1,9 +1,11 @@
 -module(role_manager).
+-include("game_pb.hrl").
+-include("game.hrl").
 
 -behaviour(gen_server).
 
 %% api
--export([start_link/0, create/1]).
+-export([start_link/0, create/2, dispatch/2]).
 
 %% gen_server
 -export([
@@ -19,22 +21,28 @@
 start_link() ->
     gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
 
-create(Conn) ->
-    gen_server:cast(?MODULE, {create, {connection, Conn}}).
+create(Name, From) ->
+    lager:info("diapatch pid: ", [{self()}]),
+    gen_server:cast(?MODULE, {create, {Name, From}}).
+
+dispatch(Pid, Proto) ->
+    gen_server:cast(Pid, {proto, Proto}).
 
 init([]) ->
     State = undefined,
+    ets:new(roles_online, [public, set, named_table, {keypos, #role.name}]),
     {ok, State}.
 
 handle_call(_Req, _From, State) ->
     {reply, ok, State}.
 
-handle_cast({create, {connection, Conn}}, State) ->
-    lager:info("gate connection, create role : ~p~n", [{Conn}]),
-    Pid = undefined,
-    Id = 123,
-    Conn ! {role_login, {pid, Pid}, {id, Id}},
-    {noreply, State};
+handle_cast({create, {Name, From}}, State) ->
+    lager:info("execute pid: ", [{self()}]),
+    lager:info("gate connection, create role : ~p~n", [{From}]),
+    {ok, Pid} = role:start(Name, From),
+    LoginS2C = #m__role__login__s2c{},
+    From ! {role_login, LoginS2C, Pid},
+   {noreply, State};
 
 handle_cast(Msg, State) ->
     lager:error("unhandled msg : ~p~n", [Msg]),
