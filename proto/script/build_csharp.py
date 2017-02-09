@@ -202,6 +202,7 @@ class ProtoNifGenerator:
 					code += "        int i = 0;\n"
 					has_repeated = True
 				code += "\n        sLen = byteArray.Readshort();\n"
+				code += "        byteArray.ReadInt32 (); //完全没用的占位\n"
 				code += "        for (i = 0; i < sLen; i++) {\n"
 				if dataType.split("_")[0] == "p":
 					code += "        %s k%s = new %s ();\n" % (dataType, dataType, dataType)
@@ -325,9 +326,11 @@ class ProtoNifGenerator:
 						code += "        int i = 0;\n"
 						has_repeated = True
 					code += "\n        sLen = byteArray.Readshort();\n"
+					code += "        byteArray.ReadInt32 (); //完全没用的占位\n"
 					code += "        for (i = 0; i < sLen; i++) {\n"
 					if dataType.split("_")[0] == "p":
 						code += "            %s k%s = new %s ();\n" % (dataType, dataType, dataType)
+						code += "            byteArray.ReadInt32 (); //完全没用的占位\n"
 						code += "            k%s.read(byteArray);\n" % dataType
 						code += "            %s.Add(k%s);\n" % (field.name, dataType)
 					else:
