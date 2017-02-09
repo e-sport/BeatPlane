@@ -69,8 +69,14 @@ handle_info({send, Proto}, #state{socket = Socket, transport = Transport} = Stat
     Bin1 = <<Len:32, Iszip:8, Bin/binary>>,
     Transport:send(Socket, Bin1),
     {noreply, State};
-handle_info({tcp_closed, Socket}, State) ->
-    {stop, normal, State};
+handle_info({tcp_closed, Socket}, #state{role = Name} = State) ->
+    {ok, DefaultGameSrv} = application:get_env(gate, default_game),
+    rpc:cast(DefaultGameSrv, role, stop, [Name, tcp_closed]),
+    {stop, tcp_closed, State};
+handle_info(timeout, #state{role = Name} = State) ->
+    {ok, DefaultGameSrv} = application:get_env(gate, default_game),
+    rpc:cast(DefaultGameSrv, role, stop, [Name, timeout]),
+    {stop, timeout, State};
 handle_info(Info, State) ->
     lager:error("unhandled into : ~p~n", [Info]),
     {noreply, State}.

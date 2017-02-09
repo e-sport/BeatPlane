@@ -5,7 +5,7 @@
 -behaviour(gen_server).
 
 %% api
--export([start/2, dispatch/2]).
+-export([start/2, dispatch/2, stop/2]).
 
 %% gen_server
 -export([
@@ -20,6 +20,10 @@
 dispatch(Name, Proto) ->
     PidName = list_to_atom(atom_to_list(?MODULE) ++ "_" ++ binary_to_list(Name)),
     gen_server:cast(PidName, {proto, Proto}).
+
+stop(Name, Reason) ->
+    PidName = list_to_atom(atom_to_list(?MODULE) ++ "_" ++ binary_to_list(Name)),
+    gen_server:cast(PidName, {stop, Reason}).
 
 %% api
 start(Name, Reader) ->
@@ -44,6 +48,8 @@ handle_cast({proto, Proto}, #role{reader = Reader} = State) ->
     State1 = apply(Mod, Fun, [Proto, Reader, State]),
 
     {noreply, State1};
+handle_cast({stop, Reason}, State) ->
+    {stop, Reason, State};
 handle_cast(Msg, State) ->
     lager:error("unhandled msg : ~p~n", [Msg]),
     {noreply, State}.
