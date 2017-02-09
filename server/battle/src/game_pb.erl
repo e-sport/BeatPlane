@@ -1,6 +1,8 @@
 -module(game_pb).
 -include("game_pb.hrl").
 -export([
+    encode_1203/1,
+    encode_1202/1,
     encode_999/1,
     encode_998/1,
     encode_p_tests/2,
@@ -13,11 +15,15 @@
     encode_1000/1,
     encode_1200/1,
     encode_p_role/1,
+    encode_1300/1,
     decode_p_roles/2
 ]).
 
 -export([
+    decode_1300/1,
     decode_1200/1,
+    decode_1203/1,
+    decode_1202/1,
     decode_999/1,
     decode_998/1,
     decode_p_role/1,
@@ -183,6 +189,70 @@ decode_bools(Bin, List) ->
             Bool = false
     end,
     decode_bools(Bin2, [Bool|List]).
+encode_1300(Record) when is_record(Record, m__battle__shot__c2s) ->
+    #m__battle__shot__c2s{msg_id=Msg_id} = Record,
+    Msg_idFinal =
+    case Msg_id =:= undefined of
+        true ->
+            1300;
+        false ->
+            Msg_id
+    end,
+    <<Msg_idFinal:32/signed>>;
+
+encode_1300(_) -> <<>>.
+
+decode_1300(Bin0) when erlang:is_binary(Bin0) andalso erlang:byte_size(Bin0) > 0 ->
+    <<Msg_id:32/signed>> = Bin0,
+    {m__battle__shot__c2s, Msg_id};
+
+decode_1300(_) ->
+    undefined.
+
+encode_1202(Record) when is_record(Record, m__scene__enemy_born__s2c) ->
+    #m__scene__enemy_born__s2c{msg_id=Msg_id,type=Type,x=X,y=Y} = Record,
+    Msg_idFinal =
+    case Msg_id =:= undefined of
+        true ->
+            1202;
+        false ->
+            Msg_id
+    end,
+    TypeFinal =
+    case Type =:= undefined of
+        true ->
+            throw({required_field_not_assigned, m__scene__enemy_born__s2c, type}),
+            undefined;
+        false ->
+            Type
+    end,
+    XFinal =
+    case X =:= undefined of
+        true ->
+            throw({required_field_not_assigned, m__scene__enemy_born__s2c, x}),
+            undefined;
+        false ->
+            X
+    end,
+    YFinal =
+    case Y =:= undefined of
+        true ->
+            throw({required_field_not_assigned, m__scene__enemy_born__s2c, y}),
+            undefined;
+        false ->
+            Y
+    end,
+    <<Msg_idFinal:32/signed,TypeFinal:8/signed,XFinal:16/signed,YFinal:16/signed>>;
+
+encode_1202(_) -> <<>>.
+
+decode_1202(Bin0) when erlang:is_binary(Bin0) andalso erlang:byte_size(Bin0) > 0 ->
+    <<Msg_id:32/signed,Type:8/signed,X:16/signed,Y:16/signed>> = Bin0,
+    {m__scene__enemy_born__s2c, Msg_id,Type,X,Y};
+
+decode_1202(_) ->
+    undefined.
+
 encode_1001(Record) when is_record(Record, m__role__login__c2s) ->
     #m__role__login__c2s{msg_id=Msg_id,name=Name} = Record,
     Msg_idFinal =
@@ -442,6 +512,42 @@ decode_999(Bin0) when erlang:is_binary(Bin0) andalso erlang:byte_size(Bin0) > 0 
 decode_999(_) ->
     undefined.
 
+encode_1203(Record) when is_record(Record, m__scene__move__c2s) ->
+    #m__scene__move__c2s{msg_id=Msg_id,x=X,y=Y} = Record,
+    Msg_idFinal =
+    case Msg_id =:= undefined of
+        true ->
+            1203;
+        false ->
+            Msg_id
+    end,
+    XFinal =
+    case X =:= undefined of
+        true ->
+            throw({required_field_not_assigned, m__scene__move__c2s, x}),
+            undefined;
+        false ->
+            X
+    end,
+    YFinal =
+    case Y =:= undefined of
+        true ->
+            throw({required_field_not_assigned, m__scene__move__c2s, y}),
+            undefined;
+        false ->
+            Y
+    end,
+    <<Msg_idFinal:32/signed,XFinal:16/signed,YFinal:16/signed>>;
+
+encode_1203(_) -> <<>>.
+
+decode_1203(Bin0) when erlang:is_binary(Bin0) andalso erlang:byte_size(Bin0) > 0 ->
+    <<Msg_id:32/signed,X:16/signed,Y:16/signed>> = Bin0,
+    {m__scene__move__c2s, Msg_id,X,Y};
+
+decode_1203(_) ->
+    undefined.
+
 encode_p_role(Record) when is_record(Record, p_role) ->
     #p_role{name=Name,x=X,y=Y} = Record,
     NameFinal =
@@ -543,13 +649,29 @@ decode_1200(_) ->
     undefined.
 
 encode_1201(Record) when is_record(Record, m__scene__roles__s2c) ->
-    #m__scene__roles__s2c{msg_id=Msg_id,roles=Roles} = Record,
+    #m__scene__roles__s2c{msg_id=Msg_id,x=X,y=Y,roles=Roles} = Record,
     Msg_idFinal =
     case Msg_id =:= undefined of
         true ->
             1201;
         false ->
             Msg_id
+    end,
+    XFinal =
+    case X =:= undefined of
+        true ->
+            throw({required_field_not_assigned, m__scene__roles__s2c, x}),
+            undefined;
+        false ->
+            X
+    end,
+    YFinal =
+    case Y =:= undefined of
+        true ->
+            throw({required_field_not_assigned, m__scene__roles__s2c, y}),
+            undefined;
+        false ->
+            Y
     end,
     case Roles =:= undefined of
         true ->
@@ -560,14 +682,14 @@ encode_1201(Record) when is_record(Record, m__scene__roles__s2c) ->
     Roles_bin = encode_p_roles(RolesFinal, <<>>),
     SizeRolesFinal = erlang:length(RolesFinal),
     BinLen_roles = erlang:byte_size(Roles_bin),
-    <<Msg_idFinal:32/signed,SizeRolesFinal:16, BinLen_roles:32, Roles_bin/binary>>;
+    <<Msg_idFinal:32/signed,XFinal:16/signed,YFinal:16/signed,SizeRolesFinal:16, BinLen_roles:32, Roles_bin/binary>>;
 
 encode_1201(_) -> <<>>.
 
 decode_1201(Bin0) when erlang:is_binary(Bin0) andalso erlang:byte_size(Bin0) > 0 ->
-    <<Msg_id:32/signed,_Sizeroles:16, _BinLenroles:32, SubBinroles/binary>> = Bin0,
+    <<Msg_id:32/signed,X:16/signed,Y:16/signed,_Sizeroles:16, _BinLenroles:32, SubBinroles/binary>> = Bin0,
     Roles = lists:reverse(decode_p_roles(SubBinroles, [])),
-    {m__scene__roles__s2c, Msg_id,Roles};
+    {m__scene__roles__s2c, Msg_id,X,Y,Roles};
 
 decode_1201(_) ->
     undefined.

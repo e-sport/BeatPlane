@@ -24,7 +24,7 @@ public class GameStart : MonoBehaviour {
 
 	void OnClick()
 	{
-		NetMgr.Instance.connect ("127.0.0.1", 8000);
+		NetMgr.Instance.connect ("192.168.42.107", 8000);
 		gameObject.AddComponent<GlobalTimer>();
 		m__role__login__c2s proto = new m__role__login__c2s();
 		proto.name = input.text;

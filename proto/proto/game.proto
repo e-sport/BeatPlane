@@ -71,16 +71,40 @@ message m__role__login__c2s {
     required string name;
 }
 
-// 角色信息
+// 登陆返回角色信息
 message m__role__login__s2c {
     required int32 msg_id [default = 1100];
 }
 
+// 进入战场
 message m__scene__enter__c2s {
     required int32 msg_id [default = 1200];
 }
-
+// 推送玩家列表
 message m__scene__roles__s2c {
     required int32 msg_id [default = 1201];
+    required short x;
+    required short y;
     repeated p_role roles;
 }
+
+// 敌机生成
+message m__scene__enemy_born__s2c {
+    required int32 msg_id [default = 1202];
+    required byte type; //敌机种类
+    required short x;
+    required short y;
+}
+
+// 移动操作
+message m__scene__move__c2s {
+    required int32 msg_id [default = 1203];
+    required short x;
+    required short y;
+}
+
+// 玩家射击
+message m__battle__shot__c2s {
+    required int32 msg_id [default = 1300];
+}
+

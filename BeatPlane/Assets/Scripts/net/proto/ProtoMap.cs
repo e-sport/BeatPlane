@@ -21,9 +21,12 @@ namespace Engine
                 return null;
             }
         }
+        public static readonly int m__battle__shot__c2s = 1300;
+        public static readonly int m__scene__enemy_born__s2c = 1202;
         public static readonly int m__role__login__c2s = 1001;
         public static readonly int m__proto__test__c2s = 998;
         public static readonly int m__proto__test__s2c = 999;
+        public static readonly int m__scene__move__c2s = 1203;
         public static readonly int m__system__heartbeat__c2s = 1000;
         public static readonly int m__role__login__s2c = 1100;
         public static readonly int m__scene__enter__c2s = 1200;
@@ -31,9 +34,12 @@ namespace Engine
         public ProtoMap()
         {
             m_DicProtoType = new Dictionary<int, Type>();
+            m_DicProtoType[m__battle__shot__c2s] = typeof(m__battle__shot__c2s);
+            m_DicProtoType[m__scene__enemy_born__s2c] = typeof(m__scene__enemy_born__s2c);
             m_DicProtoType[m__role__login__c2s] = typeof(m__role__login__c2s);
             m_DicProtoType[m__proto__test__c2s] = typeof(m__proto__test__c2s);
             m_DicProtoType[m__proto__test__s2c] = typeof(m__proto__test__s2c);
+            m_DicProtoType[m__scene__move__c2s] = typeof(m__scene__move__c2s);
             m_DicProtoType[m__system__heartbeat__c2s] = typeof(m__system__heartbeat__c2s);
             m_DicProtoType[m__role__login__s2c] = typeof(m__role__login__s2c);
             m_DicProtoType[m__scene__enter__c2s] = typeof(m__scene__enter__c2s);

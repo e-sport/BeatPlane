@@ -3,6 +3,8 @@ using Engine;
 using System.Collections.Generic;
 public class m__scene__roles__s2c : ProtoBase
 {
+    public short x;
+    public short y;
     public List<p_role> roles = new List<p_role> ();
     public m__scene__roles__s2c()
     {
@@ -11,6 +13,8 @@ public class m__scene__roles__s2c : ProtoBase
     public override void read(ByteArray byteArray)
     {
         base.read(byteArray);
+        x = byteArray.Readshort();
+        y = byteArray.Readshort();
         short sLen = 0;
         int i = 0;
 

@@ -22,7 +22,6 @@ start_link() ->
     gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
 
 create(Name, From) ->
-    lager:info("diapatch pid: ", [{self()}]),
     gen_server:cast(?MODULE, {create, {Name, From}}).
 
 dispatch(Pid, Proto) ->
@@ -37,7 +36,6 @@ handle_call(_Req, _From, State) ->
     {reply, ok, State}.
 
 handle_cast({create, {Name, From}}, State) ->
-    lager:info("execute pid: ", [{self()}]),
     lager:info("gate connection, create role : ~p~n", [{From}]),
     {ok, Pid} = role:start(Name, From),
     LoginS2C = #m__role__login__s2c{},

@@ -19,7 +19,6 @@
 
 dispatch(Name, Proto) ->
     PidName = list_to_atom(atom_to_list(?MODULE) ++ "_" ++ binary_to_list(Name)),
-    lager:info("diapatch pid: ", [{self(), PidName}]),
     gen_server:cast(PidName, {proto, Proto}).
 
 %% api

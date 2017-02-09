@@ -52,6 +52,7 @@
      <Compile Include="Assets\Scripts\GameOver.cs" />
      <Compile Include="Assets\Scripts\GameStart.cs" />
      <Compile Include="Assets\Scripts\GameStateButton.cs" />
+     <Compile Include="Assets\Scripts\MoveTouch.cs" />
      <Compile Include="Assets\Scripts\Quit.cs" />
      <Compile Include="Assets\Scripts\Restart.cs" />
      <Compile Include="Assets\Scripts\Shoot.cs" />
@@ -71,11 +72,14 @@
      <Compile Include="Assets\Scripts\net\NetSocket.cs" />
      <Compile Include="Assets\Scripts\net\ProtoBase.cs" />
      <Compile Include="Assets\Scripts\net\proto\ProtoMap.cs" />
+     <Compile Include="Assets\Scripts\net\proto\m__battle__shot__c2s.cs" />
      <Compile Include="Assets\Scripts\net\proto\m__proto__test__c2s.cs" />
      <Compile Include="Assets\Scripts\net\proto\m__proto__test__s2c.cs" />
      <Compile Include="Assets\Scripts\net\proto\m__role__login__c2s.cs" />
      <Compile Include="Assets\Scripts\net\proto\m__role__login__s2c.cs" />
+     <Compile Include="Assets\Scripts\net\proto\m__scene__enemy_born__s2c.cs" />
      <Compile Include="Assets\Scripts\net\proto\m__scene__enter__c2s.cs" />
+     <Compile Include="Assets\Scripts\net\proto\m__scene__move__c2s.cs" />
      <Compile Include="Assets\Scripts\net\proto\m__scene__roles__s2c.cs" />
      <Compile Include="Assets\Scripts\net\proto\m__system__heartbeat__c2s.cs" />
      <Compile Include="Assets\Scripts\net\proto\p_role.cs" />
