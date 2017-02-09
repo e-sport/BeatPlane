@@ -32,13 +32,16 @@ public class m__proto__test__s2c : ProtoBase
         int i = 0;
 
         sLen = byteArray.Readshort();
+        byteArray.ReadInt32 (); //完全没用的占位
         for (i = 0; i < sLen; i++) {
             v9.Add(byteArray.ReadInt32());
         }
 
         sLen = byteArray.Readshort();
+        byteArray.ReadInt32 (); //完全没用的占位
         for (i = 0; i < sLen; i++) {
             p_test kp_test = new p_test ();
+            byteArray.ReadInt32 (); //完全没用的占位
             kp_test.read(byteArray);
             v10.Add(kp_test);
         }

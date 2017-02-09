@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.UI;
 using Engine;
 
@@ -65,7 +65,11 @@ public class GameManager : MonoBehaviour {
 		Debug.Log ("roles s2c ");
 		Object original = Resources.Load ("Prefabs/hero");
 
-		Object copyObject = GameObject.Instantiate(original);
-//		copyObject.name = copyObject.name.Replace("(Clone)", "");
+		m__scene__roles__s2c p = proto as m__scene__roles__s2c;
+		for (int i = 0; i < p.roles.Count; i++) 
+		{
+			Object copyObject = GameObject.Instantiate(original);
+			copyObject.name = copyObject.name.Replace("(Clone)", "_" + p.roles[i].name);
+		}
 	}
 }
