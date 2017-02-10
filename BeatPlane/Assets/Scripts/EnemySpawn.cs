@@ -15,11 +15,11 @@ public class EnemySpawn : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-//        InvokeRepeating("createSmallEnemy", 1, smallEnemyRate); //重复生成小飞机
-//        InvokeRepeating("createMiddleEnemy", 1, middleEnemyRate); //重复生成中飞机
-//        InvokeRepeating("createBigEnemy", 1, bigEnemyRate); //重复生成大飞机
-//        InvokeRepeating("createPowerUp", 10, powerUpRate); //重复调用生成奖励物品
-//        InvokeRepeating("createBoom", 18, boomRate); //重复调用生成全屏炸弹
+        InvokeRepeating("createSmallEnemy", 1, smallEnemyRate); //重复生成小飞机
+        InvokeRepeating("createMiddleEnemy", 1, middleEnemyRate); //重复生成中飞机
+        InvokeRepeating("createBigEnemy", 1, bigEnemyRate); //重复生成大飞机
+        InvokeRepeating("createPowerUp", 10, powerUpRate); //重复调用生成奖励物品
+        InvokeRepeating("createBoom", 18, boomRate); //重复调用生成全屏炸弹
 	}
 
     void createSmallEnemy()

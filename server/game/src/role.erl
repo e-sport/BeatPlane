@@ -58,7 +58,9 @@ handle_info(Info, State) ->
     lager:error("unhandled into : ~p~n", [Info]),
     {noreply, State}.
 
-terminate(_Reason, _State) ->
+terminate(_Reason, State) ->
+    Name = State#role.name,
+    ets:delete(roles_online, Name),
     ok.
 
 code_change(_OldVsn, State, _Extra) ->
